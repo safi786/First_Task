@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-
+    {% load static %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -45,7 +45,7 @@
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Email">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
@@ -58,15 +58,8 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="{% url 'index' %}" class="btn btn-primary btn-user btn-block">
+                                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-user btn-block">
                                             Login
-                                        </a>
-                                        <hr>
-                                        <a href="{% url 'index' %}" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="{% url 'index' %}" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
                                     </form>
                                     <hr>
