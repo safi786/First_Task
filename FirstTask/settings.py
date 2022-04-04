@@ -130,3 +130,6 @@ FIELD_ENCRYPTION_KEY = b'-tVApbpcZkDsjXLNM-0QVA_SM3y-R2MnxLuKeSA56ao='
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import django_heroku
+django_heroku.settings(locals())
