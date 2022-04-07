@@ -193,7 +193,7 @@
             </div>
             <!-- /.container-fluid -->
 
-            <div class="container">
+            <div class="container pb-5">
                 <div class="row justify-content-center">
 
                     <form method="POST" class="col-lg-8">
@@ -281,40 +281,40 @@
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
-                                <label for="validationDefault03">Assets</label>
-                                {{ profileForm.asset }}
-                                {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="Assets" required>#}
-                            </div>
-                            <div class="col-md-6 mb-3">
                                 <label for="validationDefault04">Risk %</label>
                                 {{ profileForm.stop_loss_pc }}
                                 {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <label for="validationDefault03">Max Invest</label>
                                 {{ profileForm.max_invest_pc }}
                                 {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="%" required>#}
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault04">Exchange</label>
-                                {{ exchangeForm.exchange }}
-                                {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-                            </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault03">API Key</label>
-                                {{ exchangeForm.api_key }}
+{#                        <div class="form-row">#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="validationDefault03">Assets</label>#}
+{#                                {{ profileForm.asset }}#}
+                                {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="Assets" required>#}
+{#                            </div>#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="validationDefault04">Exchange</label>#}
+{#                                {{ exchangeForm.exchange }}#}
+                                {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="form-row">#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="validationDefault03">API Key</label>#}
+{#                                {{ exchangeForm.api_key }}#}
                                 {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="" required>#}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault04">Secret</label>
-                                {{ exchangeForm.secret_key }}
+{#                            </div>#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="validationDefault04">Secret</label>#}
+{#                                {{ exchangeForm.secret_key }}#}
                                 {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-                            </div>
-                        </div>
+{#                            </div>#}
+{#                        </div>#}
 
                         <div class="row justify-content-between">
                             <a class="btn btn-outline-primary" href="{% url 'dashboard' %}" type="button">Cancel</a>

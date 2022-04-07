@@ -11,7 +11,8 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 # Create your views here.
 
 
@@ -58,16 +59,18 @@ def register(request):
 
 
 
-
+@transaction.atomic
+@login_required(login_url='login')
 def dashboard(request):
     userForm = UserForm(instance=request.user)
     profileForm = ProfileForm(instance=request.user.profile)
-    userExchangeInstance = UserExchange.objects.get(user=request.user)
-    exchangeForm = UserExchangeForm(instance=userExchangeInstance)
-    context = {'userForm': userForm, 'profileForm': profileForm, 'exchangeForm': exchangeForm}
+    exchanges = UserExchange.objects.filter(user=request.user)
+    assets = Asset.objects.filter(user=request.user)
+    context = {'userForm': userForm, 'profileForm': profileForm, 'exchanges': exchanges, 'assets': assets}
     return render(request, 'dashboard.html', context)
 
-
+@transaction.atomic
+@login_required(login_url='login')
 def profile(request):
     if request.method == 'POST':
         userForm = UserForm(request.POST, instance=request.user)
@@ -78,19 +81,24 @@ def profile(request):
             print('userform is valid')
             userForm.save()
             profileForm.save()
-            messages.success(request, ('Your profile was successfully updated!'))
+            if exchangeForm.is_valid():
+                exchangeForm.save()
+                messages.success(request, ('Your profile was successfully updated!'))
+            else:
+                messages.error(request, ('Please correct the error below.'))
+                return redirect('profile')
         else:
             messages.error(request, ('Please correct the error below.'))
-        if exchangeForm.is_valid():
-            exchangeForm.save()
-        return redirect('profile')
+            return redirect('profile')
+
+        return redirect('dashboard')
 
     else:
         userForm = UserForm(instance=request.user)
         profileForm = ProfileForm(instance=request.user.profile)
-        userExchangeInstance = UserExchange.objects.get(user=request.user)
-        exchangeForm = UserExchangeForm(instance=userExchangeInstance)
-        context = {'userForm': userForm, 'profileForm': profileForm, 'exchangeForm': exchangeForm}
+        exchanges = UserExchange.objects.filter(user=request.user)
+        assets = Asset.objects.filter(user=request.user)
+        context = {'userForm': userForm, 'profileForm': profileForm, 'exchanges': exchanges, 'assets': assets}
         return render(request, 'profile.html', context)
 
 
@@ -123,7 +131,8 @@ def password_reset_request(request):
     return render(request=request, template_name="forgot-password.html",
                   context={"password_reset_form": password_reset_form})
 
-
+@transaction.atomic
+@login_required(login_url='login')
 def logoutUser(request):
     logout(request)
     return redirect('login')

@@ -15,6 +15,7 @@ class Language(models.Model):
     def __str__(self):
         return "%s (%s)" % (self.name, self.symbol)
 class Asset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     symbol = models.CharField(max_length=30)
     asset_type_id = models.IntegerField()
@@ -35,7 +36,6 @@ class Profile(models.Model):
     stop_loss_pc = models.IntegerField(null=True, blank=True)
     max_invest_pc = models.IntegerField(null=True, blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):

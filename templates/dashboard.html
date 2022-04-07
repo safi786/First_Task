@@ -193,9 +193,25 @@
             </div>
             <!-- /.container-fluid -->
 
-            <div class="container">
+            <div class="container pb-5">
                 <div class="row justify-content-center">
-
+                    {% if messages %}
+                        <ul class="messages" style="padding-left: 0px">
+                            {% for message in messages %}
+                                <div class="alert alert-success alert-dismissible fade show"
+                                     role="alert">
+                                    <svg class="bi flex-shrink-0 me-2" width="24"
+                                         height="24" role="img" aria-label="Success:">
+                                        <use xlink:href="#check-circle-fill"/>
+                                    </svg>
+                                    <strong>{{ message }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     <div class="col-lg-8">
                         <h4 class="mb-4">Personal Details</h4>
                         <fieldset disabled>
@@ -280,41 +296,69 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault03">Assets</label>
-                                <input type="text" class="form-control" id="validationDefault03" placeholder="Assets"
-                                       disabled value="{{ profileForm.asset.value }}">
-                            </div>
+
                             <div class="col-md-6 mb-3">
                                 <label for="validationDefault04">Risk %</label>
                                 <input type="text" class="form-control" id="validationDefault04" placeholder=""
                                        disabled value="{{ profileForm.stop_loss_pc.value }}">
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <label for="validationDefault03">Max Invest</label>
                                 <input type="text" class="form-control" id="validationDefault03" placeholder="%"
                                        disabled value="{{ profileForm.max_invest_pc.value }}">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault04">Exchange</label>
-                                <input type="text" class="form-control" id="validationDefault04" placeholder=""
-                                       disabled value="{{ exchangeForm.exchange.value }}">
-                            </div>
                         </div>
+                        {#                        <div class="form-row">#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault03">Assets</label>#}
+                        {#                                <input type="text" class="form-control" id="validationDefault03" placeholder="Assets"#}
+                        {#                                       disabled value="{{ profileForm.asset.value }}">#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault04">Exchange</label>#}
+                        {#                                <input type="text" class="form-control" id="validationDefault04" placeholder=""#}
+                        {#                                       disabled value="{{ exchangeForm.exchange.value }}">#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {#                        <div class="form-row">#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault03">API Key</label>#}
+                        {#                                <input type="text" class="form-control" id="validationDefault03" placeholder=""#}
+                        {#                                       disabled value="{{ exchangeForm.api_key.value }}">#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault04">Secret</label>#}
+                        {#                                <input type="text" class="form-control" id="validationDefault04" placeholder=""#}
+                        {#                                       disabled value="{{ exchangeForm.secret_key.value }}">#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                    </div>
+                    <div class="col-lg-8 pt-5">
+                        <h4 class="mb-4">Asset Details</h4>
+
+
                         <div class="form-row">
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault03">API Key</label>
-                                <input type="text" class="form-control" id="validationDefault03" placeholder=""
-                                       disabled value="{{ exchangeForm.api_key.value }}">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="validationDefault04">Secret</label>
-                                <input type="text" class="form-control" id="validationDefault04" placeholder=""
-                                       disabled value="{{ exchangeForm.secret_key.value }}">
-                            </div>
+                            {% for asset in assets %}
+                                <div class="col-md-4 mb-3">
+                                    <label for="validationDefault04">Asset {{ forloop.counter }}</label>
+                                    <input type="text" class="form-control" id="validationDefault04" placeholder=""
+                                           disabled value="{{ asset }}">
+                                </div>
+                            {% empty %}
+                                <li>Sorry, no assets in this list.</li>
+                            {% endfor %}
                         </div>
+
+
+                        <ul>
+                            {% for exchange in exchanges %}
+                                <li>{{ exchange.exchange}}</li>
+                                <li>{{ exchange.api_key}}</li>
+                                <li>{{ exchange.secret_key}}</li>
+                            {% empty %}
+                                <li>Sorry, no exchanges in this list.</li>
+                            {% endfor %}
+                        </ul>
 
                         <div class="row justify-content-between">
                             <a class="btn btn-primary" href="{% url 'profile' %}">Edit details</a>

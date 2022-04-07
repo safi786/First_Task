@@ -35,7 +35,7 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['company', 'telephone', 'language', 'user_currency', 'asset', 'stop_loss_pc', 'max_invest_pc']
+        fields = ['company', 'telephone', 'language', 'user_currency', 'stop_loss_pc', 'max_invest_pc']
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
