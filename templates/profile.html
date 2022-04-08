@@ -291,30 +291,77 @@
                                 {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="%" required>#}
                             </div>
                         </div>
-{#                        <div class="form-row">#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="validationDefault03">Assets</label>#}
-{#                                {{ profileForm.asset }}#}
-                                {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="Assets" required>#}
-{#                            </div>#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="validationDefault04">Exchange</label>#}
-{#                                {{ exchangeForm.exchange }}#}
-                                {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="form-row">#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="validationDefault03">API Key</label>#}
-{#                                {{ exchangeForm.api_key }}#}
-                                {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="" required>#}
-{#                            </div>#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="validationDefault04">Secret</label>#}
-{#                                {{ exchangeForm.secret_key }}#}
-                                {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-{#                            </div>#}
-{#                        </div>#}
+                        <div class="card shadow mb-4 mt-5">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Exchanges</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>API Key</th>
+                                            <th>Secret Key</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for exchange in exchanges %}
+                                            <tr>
+                                                <td>{{ exchange.exchange }}</td>
+                                                <td>{{ exchange.api_key }}</td>
+                                                <td>{{ exchange.secret_key }}</td>
+                                                <td class="py-0 align-middle">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="#" class="btn btn-info"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                        <a href="#" class="btn btn-danger"><i
+                                                                class="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <li>Sorry, no exchanges in this list.</li>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-primary mt-3" type="submit">Add
+                                                    Exchange
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {#                        <div class="form-row">#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault03">Assets</label>#}
+                        {#                                {{ profileForm.asset }}#}
+                        {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="Assets" required>#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault04">Exchange</label>#}
+                        {#                                {{ exchangeForm.exchange }}#}
+                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {#                        <div class="form-row">#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault03">API Key</label>#}
+                        {#                                {{ exchangeForm.api_key }}#}
+                        {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="" required>#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6 mb-3">#}
+                        {#                                <label for="validationDefault04">Secret</label>#}
+                        {#                                {{ exchangeForm.secret_key }}#}
+                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
 
                         <div class="row justify-content-between">
                             <a class="btn btn-outline-primary" href="{% url 'dashboard' %}" type="button">Cancel</a>

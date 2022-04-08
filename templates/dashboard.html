@@ -335,8 +335,6 @@
                     </div>
                     <div class="col-lg-8 pt-5">
                         <h4 class="mb-4">Asset Details</h4>
-
-
                         <div class="form-row">
                             {% for asset in assets %}
                                 <div class="col-md-4 mb-3">
@@ -348,17 +346,41 @@
                                 <li>Sorry, no assets in this list.</li>
                             {% endfor %}
                         </div>
+                        <div class="card shadow mb-4 mt-5">
+
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Exchanges</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>API Key</th>
+                                            <th>Secret Key</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for exchange in exchanges %}
+                                            <tr>
+                                                <td>{{ exchange.exchange }}</td>
+                                                <td>{{ exchange.api_key }}</td>
+                                                <td>{{ exchange.secret_key }}</td>
+
+                                            </tr>
+                                        {% empty %}
+                                            <li>Sorry, no exchanges in this list.</li>
+                                        {% endfor %}
 
 
-                        <ul>
-                            {% for exchange in exchanges %}
-                                <li>{{ exchange.exchange}}</li>
-                                <li>{{ exchange.api_key}}</li>
-                                <li>{{ exchange.secret_key}}</li>
-                            {% empty %}
-                                <li>Sorry, no exchanges in this list.</li>
-                            {% endfor %}
-                        </ul>
+                                        </tbody>
+                                        <tfoot>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row justify-content-between">
                             <a class="btn btn-primary" href="{% url 'profile' %}">Edit details</a>
