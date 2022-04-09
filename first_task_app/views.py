@@ -13,6 +13,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+import json
+
+
 # Create your views here.
 
 
@@ -58,48 +63,74 @@ def register(request):
         return render(request, 'register.html', context)
 
 
-
 @transaction.atomic
 @login_required(login_url='login')
 def dashboard(request):
     userForm = UserForm(instance=request.user)
     profileForm = ProfileForm(instance=request.user.profile)
     exchanges = UserExchange.objects.filter(user=request.user)
-    assets = Asset.objects.filter(user=request.user)
+    assets = UserAsset.objects.filter(user=request.user)
     context = {'userForm': userForm, 'profileForm': profileForm, 'exchanges': exchanges, 'assets': assets}
     return render(request, 'dashboard.html', context)
+
 
 @transaction.atomic
 @login_required(login_url='login')
 def profile(request):
     if request.method == 'POST':
+
         userForm = UserForm(request.POST, instance=request.user)
         profileForm = ProfileForm(request.POST, instance=request.user.profile)
-        userExchangeInstance = UserExchange.objects.get(user=request.user)
-        exchangeForm = UserExchangeForm(request.POST, instance=userExchangeInstance)
-        if userForm.is_valid() and profileForm.is_valid():
-            print('userform is valid')
-            userForm.save()
-            profileForm.save()
-            if exchangeForm.is_valid():
-                exchangeForm.save()
-                messages.success(request, ('Your profile was successfully updated!'))
+        exchangeForm = UserExchangeForm(request.POST)
+        assetForm = UserAssetForm(request.POST)
+        exchanges = UserExchange.objects.filter(user=request.user)
+        if 'ExchangeFormSubmit' in request.POST:
+            if len(exchanges) < 3:
+                if exchangeForm.is_valid():
+                    obj = exchangeForm.save(commit=False)
+                    obj.user = request.user
+                    obj.save()
+                    messages.success(request, ('New exchange added successfully!'))
+                else:
+                    messages.error(request, ('Please correct the error in exchanges'))
+                    return redirect('profile')
+        if 'AssetFormSubmit' in request.POST:
+            if assetForm.is_valid():
+                obj = assetForm.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                messages.success(request, ('New asset added successfully!'))
             else:
-                messages.error(request, ('Please correct the error below.'))
+                messages.error(request, ('Please correct the error in exchanges'))
                 return redirect('profile')
-        else:
-            messages.error(request, ('Please correct the error below.'))
-            return redirect('profile')
+        if 'UserProfileFormSubmit' in request.POST:
+            if userForm.is_valid() and profileForm.is_valid():
+                userForm.save()
+                profileForm.save()
 
-        return redirect('dashboard')
+            else:
+                errors = ProfileForm.errors
+                return redirect('profile', json.dumps(errors))
+
+        return redirect('profile')
 
     else:
         userForm = UserForm(instance=request.user)
         profileForm = ProfileForm(instance=request.user.profile)
         exchanges = UserExchange.objects.filter(user=request.user)
-        assets = Asset.objects.filter(user=request.user)
-        context = {'userForm': userForm, 'profileForm': profileForm, 'exchanges': exchanges, 'assets': assets}
+        exchangeForm = UserExchangeForm(instance=request.user)
+        assetForm = UserAssetForm(instance=request.user)
+        assets = UserAsset.objects.filter(user=request.user)
+        context = {'userForm': userForm, 'profileForm': profileForm, 'exchangeForm': exchangeForm,
+                   'assetForm': assetForm, 'exchanges': exchanges, 'assets': assets}
         return render(request, 'profile.html', context)
+
+
+class deleteExchange(DeleteView):
+    model = UserExchange
+    # form_class = UserExchangeForm
+    template_name = 'userexchange_confirm_delete.html'
+    success_url = reverse_lazy('profile')
 
 
 def password_reset_request(request):
@@ -130,6 +161,7 @@ def password_reset_request(request):
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="forgot-password.html",
                   context={"password_reset_form": password_reset_form})
+
 
 @transaction.atomic
 @login_required(login_url='login')

@@ -49,11 +49,27 @@ class ProfileForm(forms.ModelForm):
 class UserExchangeForm(forms.ModelForm):
     class Meta:
         model = UserExchange
-        fields = ['exchange', 'api_key', 'secret_key']
+        fields = ['user', 'exchange', 'api_key', 'secret_key']
 
     def __init__(self, *args, **kwargs):
         super(UserExchangeForm, self).__init__(*args, **kwargs)
         # self.fields['username'].required = False
+        self.fields['user'].required = False
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-user'
+            # visible.field.label.attrs['class'] = 'short-heading mb-2'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+
+
+class UserAssetForm(forms.ModelForm):
+    class Meta:
+        model = UserAsset
+        fields = ['user', 'asset']
+
+    def __init__(self, *args, **kwargs):
+        super(UserAssetForm, self).__init__(*args, **kwargs)
+        # self.fields['username'].required = False
+        self.fields['user'].required = False
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control form-control-user'
             # visible.field.label.attrs['class'] = 'short-heading mb-2'

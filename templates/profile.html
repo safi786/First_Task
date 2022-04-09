@@ -153,7 +153,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ userForm.username.value }}</span>
-                            <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg ' %}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -291,6 +291,31 @@
                                 {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="%" required>#}
                             </div>
                         </div>
+
+                        <div class="card shadow mb-4 mt-5">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Asset Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    {% for asset in assets %}
+                                        <div class="col-md-4 mb-3">
+                                            <label for="validationDefault04">Asset {{ forloop.counter }}</label>
+                                            <input type="text" class="form-control" id="validationDefault04"
+                                                   placeholder=""
+                                                   disabled value="{{ asset }}">
+                                        </div>
+                                    {% empty %}
+                                        <li>Sorry, no assets in this list.</li>
+                                    {% endfor %}
+                                </div>
+                                <button class="btn btn-primary mt-3" type="button"
+                                        data-toggle="modal"
+                                        data-target="#modal-default1">Add Asset
+
+                                </button>
+                            </div>
+                        </div>
                         <div class="card shadow mb-4 mt-5">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Exchanges</h6>
@@ -314,9 +339,10 @@
                                                 <td>{{ exchange.secret_key }}</td>
                                                 <td class="py-0 align-middle">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="#" class="btn btn-info"><i
-                                                                class="fas fa-pencil-alt"></i></a>
-                                                        <a href="#" class="btn btn-danger"><i
+                                                        {#                                                        <a href="{% url 'editExchange'  exchange.id  %}" class="btn btn-info"><i#}
+                                                        {#                                                                class="fas fa-pencil-alt"></i></a>#}
+                                                        <a href="{% url 'deleteExchange'  exchange.id %}"
+                                                           class="btn btn-danger"><i
                                                                 class="fas fa-trash"></i></a>
                                                     </div>
                                                 </td>
@@ -328,8 +354,16 @@
                                         <tfoot>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-primary mt-3" type="submit">Add
-                                                    Exchange
+                                                {% if exchanges|length == 3 %}
+                                                    <button class="btn btn-primary mt-3" disabled type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-default">Add Exchange
+                                                {% else %}
+
+                                                    <button class="btn btn-primary mt-3" type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-default">Add Exchange
+                                                {% endif %}
                                                 </button>
                                             </td>
                                         </tr>
@@ -338,39 +372,85 @@
                                 </div>
                             </div>
                         </div>
-                        {#                        <div class="form-row">#}
-                        {#                            <div class="col-md-6 mb-3">#}
-                        {#                                <label for="validationDefault03">Assets</label>#}
-                        {#                                {{ profileForm.asset }}#}
-                        {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="Assets" required>#}
-                        {#                            </div>#}
-                        {#                            <div class="col-md-6 mb-3">#}
-                        {#                                <label for="validationDefault04">Exchange</label>#}
-                        {#                                {{ exchangeForm.exchange }}#}
-                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-                        {#                            </div>#}
-                        {#                        </div>#}
-                        {#                        <div class="form-row">#}
-                        {#                            <div class="col-md-6 mb-3">#}
-                        {#                                <label for="validationDefault03">API Key</label>#}
-                        {#                                {{ exchangeForm.api_key }}#}
-                        {#                                    <input type="text" class="form-control" id="validationDefault03" placeholder="" required>#}
-                        {#                            </div>#}
-                        {#                            <div class="col-md-6 mb-3">#}
-                        {#                                <label for="validationDefault04">Secret</label>#}
-                        {#                                {{ exchangeForm.secret_key }}#}
-                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
-                        {#                            </div>#}
-                        {#                        </div>#}
 
                         <div class="row justify-content-between">
                             <a class="btn btn-outline-primary" href="{% url 'dashboard' %}" type="button">Cancel</a>
-                            <button class="btn btn-primary" type="submit">Update</button>
+                            <button class="btn btn-primary" name="UserProfileFormSubmit" type="submit">Update</button>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <div class="modal fade" id="modal-default">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add exchange</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Risk %</label>
+                                        {{ exchangeForm.exchange }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Risk %</label>
+                                        {{ exchangeForm.api_key }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Risk %</label>
+                                        {{ exchangeForm.secret_key }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                </button>
+                                <button type="submit" name="ExchangeFormSubmit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-default1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add asset</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Risk %</label>
+                                        {{ assetForm.asset }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                </button>
+                                <button type="submit" name="AssetFormSubmit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- End of Main Content -->
 
