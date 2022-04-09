@@ -28,8 +28,14 @@ class UserExchangeAdmin(admin.ModelAdmin):
     list_filter = [field.name for field in UserExchange._meta.fields if field.name != "id"]
 
 
+class UserAssetAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in UserAsset._meta.fields if field.name != "id"]
+    list_filter = [field.name for field in UserAsset._meta.fields if field.name != "id"]
+
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Asset, AssetAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
+admin.site.register(UserAsset, UserAssetAdmin)
 admin.site.register(UserExchange, UserExchangeAdmin)

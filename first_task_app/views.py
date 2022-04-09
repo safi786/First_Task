@@ -91,6 +91,7 @@ def profile(request):
                     obj.user = request.user
                     obj.save()
                     messages.success(request, ('New exchange added successfully!'))
+                    return redirect('profile')
                 else:
                     messages.error(request, ('Please correct the error in exchanges'))
                     return redirect('profile')
@@ -100,6 +101,7 @@ def profile(request):
                 obj.user = request.user
                 obj.save()
                 messages.success(request, ('New asset added successfully!'))
+                return redirect('profile')
             else:
                 messages.error(request, ('Please correct the error in exchanges'))
                 return redirect('profile')
@@ -107,12 +109,12 @@ def profile(request):
             if userForm.is_valid() and profileForm.is_valid():
                 userForm.save()
                 profileForm.save()
+                messages.success(request, ('Profile updated successfully!'))
+                return redirect('dashboard')
 
             else:
                 errors = ProfileForm.errors
                 return redirect('profile', json.dumps(errors))
-
-        return redirect('profile')
 
     else:
         userForm = UserForm(instance=request.user)
