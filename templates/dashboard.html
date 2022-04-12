@@ -190,6 +190,7 @@
                 <!-- Page Heading -->
                 <h1 class="h3 mb-4 text-gray-800">User Profile</h1>
 
+
             </div>
             <!-- /.container-fluid -->
 
@@ -197,7 +198,17 @@
                 <div class="row justify-content-center">
 
                     <div class="col-lg-8">
-                        <h4 class="mb-4">Personal Details</h4>
+                        <div class="row">
+                            <div class="col-lg 11">
+                                <h4 class="mb-4">Personal Details</h4>
+                            </div>
+                            <div class="col-lg-1">
+
+
+                                <a alt="Edit details" href="{% url 'profile' %}"> <i class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+
                         {% if messages %}
                             <ul class="messages" style="padding-left: 0px">
                                 {% for message in messages %}
@@ -353,7 +364,8 @@
                             <div class="col-md-6 mb-3" disabled="true">
                                 <label for="validationDefault03">Language</label>
                                 <input type="text" class="form-control" id="validationDefault03"
-                                       placeholder="Select language" disabled value="{{ profileForm.instance.language.symbol }}">
+                                       placeholder="Select language" disabled
+                                       value="{{ profileForm.instance.language.symbol }}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="validationDefault04">Currency</label>
@@ -370,7 +382,7 @@
                                        disabled value="{{ profileForm.stop_loss_pc.value }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="validationDefault03">Max Invest</label>
+                                <label for="validationDefault03">Max Invest %</label>
                                 <input type="text" class="form-control" id="validationDefault03" placeholder="%"
                                        disabled value="{{ profileForm.max_invest_pc.value }}">
                             </div>
@@ -399,22 +411,57 @@
                         {#                                       disabled value="{{ exchangeForm.secret_key.value }}">#}
                         {#                            </div>#}
                         {#                        </div>#}
-                    </div>
-                    <div class="col-lg-8 pt-5">
-                        <h4 class="mb-4">Asset Details</h4>
-                        <div class="form-row">
-                            {% for asset in assets %}
-                                <div class="col-md-4 mb-3">
-                                    <label for="validationDefault04">Asset {{ forloop.counter }}</label>
-                                    <input type="text" class="form-control" id="validationDefault04" placeholder=""
-                                           disabled value="{{ asset }}">
+
+                        <div class="card shadow mb-4 mt-5">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Asset Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Symbol</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for asset in assets %}
+                                            <tr>
+                                                <td>{{ asset.asset.name }}</td>
+                                                <td>{{ asset.asset.symbol }}</td>
+                                                <td class="py-0 align-middle">
+                                                    <div class="btn-group btn-group-sm">
+                                                        {#                                                        <a href="{% url 'editExchange'  exchange.id  %}" class="btn btn-info"><i#}
+                                                        {#                                                                class="fas fa-pencil-alt"></i></a>#}
+                                                        <a href="{% url 'deleteAsset'  asset.id %}"
+                                                           class="btn btn-danger"><i
+                                                                class="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <li>Sorry, no assets in this list.</li>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-primary mt-3" type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#modal-default1">Add Asset
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+
                                 </div>
-                            {% empty %}
-                                <li>Sorry, no assets in this list.</li>
-                            {% endfor %}
+
+                            </div>
                         </div>
                         <div class="card shadow mb-4 mt-5">
-
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Exchanges</h6>
                             </div>
@@ -426,6 +473,7 @@
                                             <th>Name</th>
                                             <th>API Key</th>
                                             <th>Secret Key</th>
+                                            <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -434,81 +482,221 @@
                                                 <td>{{ exchange.exchange }}</td>
                                                 <td>{{ exchange.api_key }}</td>
                                                 <td>{{ exchange.secret_key }}</td>
-
+                                                <td class="py-0 align-middle">
+                                                    <div class="btn-group btn-group-sm">
+                                                        {#                                                        <a href="{% url 'editExchange'  exchange.id  %}" class="btn btn-info"><i#}
+                                                        {#                                                                class="fas fa-pencil-alt"></i></a>#}
+                                                        <a href="{% url 'deleteExchange'  exchange.id %}"
+                                                           class="btn btn-danger"><i
+                                                                class="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         {% empty %}
                                             <li>Sorry, no exchanges in this list.</li>
                                         {% endfor %}
-
-
                                         </tbody>
                                         <tfoot>
+                                        <tr>
+                                            <td>
+                                                {% if exchanges|length == 3 %}
+                                                    <button class="btn btn-primary mt-3" disabled type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-default">Add Exchange
+                                                {% else %}
+
+                                                    <button class="btn btn-primary mt-3" type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-default">Add Exchange
+                                                {% endif %}
+                                                </button>
+                                            </td>
+                                        </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                        {#                    <div class="col-lg-8 pt-5">#}
+                        {#                        <h4 class="mb-4">Asset Details</h4>#}
+                        {#                        <div class="form-row">#}
+                        {#                            {% for asset in assets %}#}
+                        {#                                <div class="col-md-4 mb-3">#}
+                        {#                                    <label for="validationDefault04">Asset {{ forloop.counter }}</label>#}
+                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder=""#}
+                        {#                                           disabled value="{{ asset }}">#}
+                        {#                                </div>#}
+                        {#                            {% empty %}#}
+                        {#                                <li>Sorry, no assets in this list.</li>#}
+                        {#                            {% endfor %}#}
+                        {#                        </div>#}
+                        {#                        <div class="card shadow mb-4 mt-5">#}
+                        {##}
+                        {#                            <div class="card-header py-3">#}
+                        {#                                <h6 class="m-0 font-weight-bold text-primary">Exchanges</h6>#}
+                        {#                            </div>#}
+                        {#                            <div class="card-body">#}
+                        {#                                <div class="table-responsive">#}
+                        {#                                    <table class="table" id="dataTable" width="100%" cellspacing="0">#}
+                        {#                                        <thead>#}
+                        {#                                        <tr>#}
+                        {#                                            <th>Name</th>#}
+                        {#                                            <th>API Key</th>#}
+                        {#                                            <th>Secret Key</th>#}
+                        {#                                        </tr>#}
+                        {#                                        </thead>#}
+                        {#                                        <tbody>#}
+                        {#                                        {% for exchange in exchanges %}#}
+                        {#                                            <tr>#}
+                        {#                                                <td>{{ exchange.exchange }}</td>#}
+                        {#                                                <td>{{ exchange.api_key }}</td>#}
+                        {#                                                <td>{{ exchange.secret_key }}</td>#}
+                        {##}
+                        {#                                            </tr>#}
+                        {#                                        {% empty %}#}
+                        {#                                            <li>Sorry, no exchanges in this list.</li>#}
+                        {#                                        {% endfor %}#}
+                        {##}
+                        {##}
+                        {#                                        </tbody>#}
+                        {#                                        <tfoot>#}
+                        {#                                        </tfoot>#}
+                        {#                                    </table>#}
+                        {#                                </div>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {##}
+                        {#                        #}
+                        {#                    </div>#}
+                        {#                        <div class="row justify-content-between">#}
+                        {#                            <a class="btn btn-primary" href="{% url 'profile' %}">Edit details</a>#}
+                        {#                        </div>#}
+                    </div>
+                </div>
 
-                        <div class="row justify-content-between">
-                            <a class="btn btn-primary" href="{% url 'profile' %}">Edit details</a>
+            </div>
+            <div class="modal fade" id="modal-default">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add exchange</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Exchange</label>
+                                        {{ exchangeForm.exchange }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">API key</label>
+                                        {{ exchangeForm.api_key }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Secret key</label>
+                                        {{ exchangeForm.secret_key }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                </button>
+                                <button type="submit" name="ExchangeFormSubmit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modal-default1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
 
-        </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add asset</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationDefault04">Asset</label>
+                                        {{ assetForm.asset }}
+                                        {#                                    <input type="text" class="form-control" id="validationDefault04" placeholder="" required>#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                </button>
+                                <button type="submit" name="AssetFormSubmit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Page Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabdashboard="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabdashboard="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
 </body>
 

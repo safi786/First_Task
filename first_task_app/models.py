@@ -30,11 +30,19 @@ class Asset(models.Model):
 
 
 class Profile(models.Model):
+    var_choices = (
+        ('EUR', 'EUR'),
+        ('USD', 'USD'),
+        ('CHF', 'CHF'),
+        ('GBP', 'GBP'),
+        ('BTC', 'BTC'),
+        ('ETH', 'ETH'),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company = models.CharField(max_length=50)
     telephone = models.CharField(max_length=50)
     typ = models.IntegerField(null=True, blank=True)
-    user_currency = models.CharField(max_length=30, blank=True)
+    user_currency = models.CharField(max_length=30, blank=True, choices=var_choices)
     money = models.FloatField(null=True, blank=True)
     portfolio_calc = models.FloatField(null=True, blank=True)
     stop_loss_pc = models.IntegerField(null=True, blank=True)

@@ -201,16 +201,13 @@
 {#                                            <a class="btn btn-outline-primary" href="{% url 'dashboard' %}"#}
 {#                                               type="button">Cancel</a>#}
                                             <button class="btn btn-danger" value="Confirm" type="submit">Delete</button>
+                                            <a href="{{ request.META.HTTP_REFERER|escape }}"
+                                                   class="btn btn-secondary">Cancel</a>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <a href="{{ request.META.HTTP_REFERER|escape }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
             </div>
