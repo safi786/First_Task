@@ -21,7 +21,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-
+from django.contrib.auth import update_session_auth_hash
 UserModel = get_user_model()
 
 
@@ -78,15 +78,18 @@ def user_login(request):
             password = request.POST.get('password')
             try:
                 user = User.objects.get(email=email)
-                if user is not None:
-                    user = authenticate(request, username=user.username, password=password)
+                if user.is_active:
                     if user is not None:
-                        login(request, user)
-                        return redirect('dashboard')
+                        user = authenticate(request, username=user.username, password=password)
+                        if user is not None:
+                            login(request, user)
+                            return redirect('dashboard')
+                        else:
+                            messages.error(request, 'Username OR password is incorrect')
                     else:
                         messages.error(request, 'Username OR password is incorrect')
                 else:
-                    messages.error(request, 'Username OR password is incorrect')
+                    messages.error(request, 'Please check your email and verify your account first')
             except:
                 messages.error(request, 'Username OR password is incorrect')
         context = {}
