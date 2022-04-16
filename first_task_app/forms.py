@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import *
 from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class CreateUserForm(UserCreationForm):
@@ -74,3 +75,10 @@ class UserAssetForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control form-control-user'
             # visible.field.label.attrs['class'] = 'short-heading mb-2'
             visible.field.widget.attrs['placeholder'] = visible.field.label
+
+
+class PasswordChangeCustomForm(PasswordChangeForm):
+    def __init__(self, user, *args, **kwargs):
+        super(PasswordChangeCustomForm, self).__init__(user, *args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'

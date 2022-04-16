@@ -1,0 +1,9 @@
+<html>
+  <body>
+    <p>Hi,<br>
+       How are you?<br>
+       This is <a href="http://www.google.com">Google</a> link to ensure HTML template working perfectly.
+
+    </p>
+  </body>
+</html>
