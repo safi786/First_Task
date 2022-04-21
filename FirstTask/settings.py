@@ -134,12 +134,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import django_heroku
 django_heroku.settings(locals())
 
+# env = environ.Env()
+# environ.Env.read_env()
 env = environ.Env()
-environ.Env.read_env()
+
+# read th .env file
+environ.Env.read_env(env_file=str(BASE_DIR) + '/.env')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 EMAIL_HOST = 'smtp.gmail.com'
+# print(env('EMAIL_HOST_PASSWORD'))
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_PORT = 465

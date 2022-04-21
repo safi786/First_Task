@@ -216,18 +216,18 @@ def updatePassword(request):
 
 def password_reset_request(request):
     if request.method == "POST":
-        password_reset_form = PasswordResetForm(request.POST)
+        password_reset_form = UserPasswordResetForm(request.POST)
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
             associated_users = User.objects.filter(Q(email=data))
             if associated_users.exists():
                 for user in associated_users:
+                    current_site = get_current_site(request)
                     subject = "Password Reset Requested"
                     email_template_name = "password_reset_email.txt"
                     c = {
-                        "email": user.email,
-                        'domain': '127.0.0.1:8000',
-                        'site_name': 'Website',
+                        "email": data,
+                        'domain': current_site.domain,
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': default_token_generator.make_token(user),
@@ -235,11 +235,18 @@ def password_reset_request(request):
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+                        email = EmailMessage(
+                            subject, email, to=[data]
+                        )
+                        email.send()
+                        # send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     return redirect("/password_reset/done/")
-    password_reset_form = PasswordResetForm()
+            else:
+                messages.error(request, 'Account with this email not registered. Please check email entered or create new account')
+    else:
+        password_reset_form = UserPasswordResetForm()
     return render(request=request, template_name="forgot-password.html",
                   context={"password_reset_form": password_reset_form})
 

@@ -80,5 +80,18 @@ class UserAssetForm(forms.ModelForm):
 class PasswordChangeCustomForm(PasswordChangeForm):
     def __init__(self, user, *args, **kwargs):
         super(PasswordChangeCustomForm, self).__init__(user, *args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs['class'] = 'form-control'
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-user'
+            # visible.field.label.attrs['class'] = 'short-heading mb-2'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+
+
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+
+class UserPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(UserPasswordResetForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-user'
+            # visible.field.label.attrs['class'] = 'short-heading mb-2'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
